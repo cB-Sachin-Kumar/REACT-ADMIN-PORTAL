@@ -17,6 +17,8 @@ export const API_ENDPOINTS = {
   admin: {
     getReport: "stage-two/get-seceratary-data",
     getCandidateDetails: "stage-two/get-user-data",
+    handleVerifyCandidate: "stage-two/verify-candidate",
+    handleRejectCandidate: "stage-two/reject-candidate",
   },
 };
 

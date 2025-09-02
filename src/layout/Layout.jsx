@@ -21,9 +21,13 @@ const Layout = () => {
       <div className="flex">
         <Sidebar isOpen={sidebarOpen} />
         <main
-          className={`flex-1 pt-16 transition-all duration-300 ${
-            sidebarOpen ? "ml-64" : "ml-16"
-          }`}
+          className={`
+            flex-1
+            pt-16
+            transition-all duration-300
+            ${sidebarOpen ? "pl-64" : "pl-16"}
+            min-w-0 overflow-hidden
+          `}
         >
           <div className="p-4">
             <Outlet />

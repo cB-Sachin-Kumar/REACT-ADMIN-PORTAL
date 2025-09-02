@@ -30,6 +30,13 @@ const DashboardContainer = () => {
       color: "bg-orange-500",
       change: "+0.1%",
     },
+    {
+      title: "Total User",
+      value: "1,34",
+      icon: Users,
+      color: "bg-blue-500",
+      change: "+12%",
+    },
   ];
 
   const recent = [

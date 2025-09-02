@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useDistricts } from "../../hooks/useDistrict";
 import { useProposalForm } from "../../hooks/useProposalForm";
 import {
@@ -34,6 +34,11 @@ export default function ProposalFormContainer() {
 
   const [validationErrors, setValidationErrors] = useState({});
 
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
   // Handle input change with validation
   const handleFieldChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -268,6 +273,7 @@ export default function ProposalFormContainer() {
                     }`}
                     name="aisheCode"
                     value={formData.aisheCode}
+                    ref={inputRef}
                     onChange={handleFieldChange}
                     placeholder="Enter AISHE Code"
                   />
