@@ -26,4 +26,20 @@ export const adminApi = {
     );
     return data;
   },
+
+  handleVerifyCandidate: async (payload) => {
+    const { data } = await apiClient.post(
+      API_ENDPOINTS.admin.handleVerifyCandidate,
+      payload
+    );
+    return data;
+  },
+
+  handleRejectCandidate: async (payload) => {
+    const { data } = await apiClient.post(
+      API_ENDPOINTS.admin.handleRejectCandidate,
+      payload
+    );
+    return data;
+  },
 };

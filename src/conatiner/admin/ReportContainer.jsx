@@ -46,6 +46,7 @@ const ReportConatiner = () => {
       };
       const response = await adminApi.getCandidateDetails(payload);
       if (response.data.success) {
+        //if api success saved candidates details into state
         setSelectedCandidate(response.data.data.userBasicInfoData);
         setShowModal(true);
       } else {
@@ -55,6 +56,76 @@ const ReportConatiner = () => {
       console.error("Error fetching candidate details:", error);
       alert("Error occurred while fetching candidate details");
     }
+  };
+
+  // const handleVerifyCandidate = async (registrationNo) => {
+  //   try {
+  //     setLoading(true);
+  //     const payload = {
+  //       registrationNo: registrationNo,
+  //     };
+  //     const response = await adminApi.verifyCandidate(payload);
+  //     if (response.data.success) {
+  //       alert("Candidate Verified Successfully");
+  //       setShowModal(false);
+  //       getData();
+  //     } else {
+  //       alert("Failed to verify candidate");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error verifying candidate:", error);
+  //     alert("Error occurred while verifying candidate");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const handleVerifyCandidate = async (registrationNo) => {
+    try {
+      setLoading(true);
+      const payload = {
+        registrationNo: registrationNo,
+      };
+
+      const res = await adminApi.handleVerifyCandidate(payload);
+      if (res.data.success) {
+        alert("Candidate Verified Successfully");
+        setShowModal(false);
+        getData();
+      } else {
+        alert("Failed to verify candidate");
+      }
+    } catch (error) {
+      console.error("Error verifying candidate:", error);
+      alert("Error occurred while verifying candidate");
+    }
+  };
+
+  const handleRejectCandidate = async (registrationNo) => {
+    try {
+      const payload = {
+        registrationNo: registrationNo,
+        reason: "rejected",
+      };
+      const res = await adminApi.handleRejectCandidate(payload);
+      if (res.data.success) {
+        alert("Candidate Rejected Successfully");
+        setShowModal(false);
+        getData();
+      } else {
+        alert("Failed to reject candidate");
+      }
+    } catch (error) {
+      console.error("Error rejecting candidate:", error);
+      alert("Error occurred while rejecting candidate");
+    }
+  };
+
+  const handlePrintApplication = (registrationNo) => {
+    window.open(
+      `/admin/print-application?registrationNo=${registrationNo}`,
+      "_blank"
+    );
   };
 
   const exportToExcel = () => {
@@ -221,91 +292,113 @@ const ReportConatiner = () => {
                   Export to Excel
                 </button>
               </div>
-              <div className="overflow-x-auto">
-                <table className="min-w-full border border-gray-300">
-                  <thead className="bg-gray-800 text-white">
-                    <tr>
-                      <th className="px-4 py-3 text-left border-b border-gray-300">
-                        S.No
-                      </th>
-                      <th className="px-4 py-3 text-left border-b border-gray-300">
-                        Registration No
-                      </th>
-                      <th className="px-4 py-3 text-left border-b border-gray-300">
-                        Candidate Name
-                      </th>
-                      <th className="px-4 py-3 text-left border-b border-gray-300">
-                        Father's Name
-                      </th>
-                      <th className="px-4 py-3 text-left border-b border-gray-300">
-                        District
-                      </th>
-                      <th className="px-4 py-3 text-left border-b border-gray-300">
-                        Standard
-                      </th>
-                      <th className="px-4 py-3 text-left border-b border-gray-300">
-                        Aadhar No
-                      </th>
-                      <th className="px-4 py-3 text-left border-b border-gray-300">
-                        Final Submitted
-                      </th>
-                      <th className="px-4 py-3 text-left border-b border-gray-300">
-                        Action
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white">
-                    {tableData.map((candidate, index) => (
-                      <tr
-                        key={candidate.id}
-                        className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
-                      >
-                        <td className="px-4 py-3 border-b border-gray-300">
-                          {index + 1}
-                        </td>
-                        <td className="px-4 py-3 border-b border-gray-300">
-                          {candidate.registrationNo}
-                        </td>
-                        <td className="px-4 py-3 border-b border-gray-300">
-                          {candidate.fullName}
-                        </td>
-                        <td className="px-4 py-3 border-b border-gray-300">
-                          {candidate.fatherName}
-                        </td>
-                        <td className="px-4 py-3 border-b border-gray-300">
-                          {candidate.homeDistrictName}
-                        </td>
-                        <td className="px-4 py-3 border-b border-gray-300">
-                          {candidate.standardName}
-                        </td>
-                        <td className="px-4 py-3 border-b border-gray-300">
-                          {candidate.adharNo}
-                        </td>
-                        <td className="px-4 py-3 border-b border-gray-300">
-                          <span
-                            className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${
-                              candidate.finalSubmit === "YES"
-                                ? "bg-green-100 text-green-800"
-                                : "bg-blue-100 text-blue-800"
-                            }`}
-                          >
-                            {candidate.finalSubmit}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 border-b border-gray-300">
-                          <button
-                            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 text-sm rounded-md transition-colors"
-                            onClick={() =>
-                              handleTakeAction(candidate.registrationNo)
-                            }
-                          >
-                            Take Action
-                          </button>
-                        </td>
+
+              {/* ✅ Scrollbar will appear only here */}
+              <div
+                className="max-w-full overflow-x-auto"
+                style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}
+              >
+                <div className="w-full overflow-x-auto rounded-lg border border-gray-300">
+                  <table className="min-w-full divide-y divide-gray-300">
+                    <thead className="bg-gray-800 text-white sticky top-0">
+                      <tr>
+                        <th className="px-4 py-3 text-left border-b border-gray-300">
+                          S.No
+                        </th>
+                        <th className="px-4 py-3 text-left border-b border-gray-300">
+                          Registration No
+                        </th>
+                        <th className="px-4 py-3 text-left border-b border-gray-300">
+                          Candidate Name
+                        </th>
+                        <th className="px-4 py-3 text-left border-b border-gray-300">
+                          Father's Name
+                        </th>
+                        <th className="px-4 py-3 text-left border-b border-gray-300">
+                          District
+                        </th>
+                        <th className="px-4 py-3 text-left border-b border-gray-300">
+                          Standard
+                        </th>
+                        <th className="px-4 py-3 text-left border-b border-gray-300">
+                          Aadhar No
+                        </th>
+                        <th className="px-4 py-3 text-left border-b border-gray-300">
+                          Final Submitted
+                        </th>
+                        <th className="px-4 py-3 text-left border-b border-gray-300">
+                          Action
+                        </th>
+                        <th className="px-4 py-3 text-left border-b border-gray-300">
+                          Print Application
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {tableData.map((candidate, index) => (
+                        <tr
+                          key={candidate.id}
+                          className={
+                            index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                          }
+                        >
+                          <td className="px-4 py-3 border-b border-gray-300">
+                            {index + 1}
+                          </td>
+                          <td className="px-4 py-3 border-b border-gray-300">
+                            {candidate.registrationNo}
+                          </td>
+                          <td className="px-4 py-3 border-b border-gray-300">
+                            {candidate.fullName}
+                          </td>
+                          <td className="px-4 py-3 border-b border-gray-300">
+                            {candidate.fatherName}
+                          </td>
+                          <td className="px-4 py-3 border-b border-gray-300">
+                            {candidate.homeDistrictName}
+                          </td>
+                          <td className="px-4 py-3 border-b border-gray-300">
+                            {candidate.standardName}
+                          </td>
+                          <td className="px-4 py-3 border-b border-gray-300">
+                            {candidate.adharNo}
+                          </td>
+                          <td className="px-4 py-3 border-b border-gray-300">
+                            <span
+                              className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${
+                                candidate.finalSubmit === "YES"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-blue-100 text-blue-800"
+                              }`}
+                            >
+                              {candidate.finalSubmit}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 border-b border-gray-300">
+                            <button
+                              className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 text-sm rounded-md transition-colors"
+                              onClick={() =>
+                                handleTakeAction(candidate.registrationNo)
+                              }
+                            >
+                              Take Action
+                            </button>
+                          </td>
+                          <td className="px-4 py-3 border-b border-gray-300">
+                            <button
+                              className="bg-green-500 hover:bg-blue-600 text-white px-3 py-1 text-sm rounded-md transition-colors"
+                              onClick={() =>
+                                handlePrintApplication(candidate.registrationNo)
+                              }
+                            >
+                              Print Application
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
@@ -376,17 +469,25 @@ const ReportConatiner = () => {
                       Actions Available:
                     </h4>
                     <div className="flex flex-wrap gap-3">
-                      <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors">
+                      <button
+                        onClick={() =>
+                          handleVerifyCandidate(
+                            selectedCandidate.registrationNo
+                          )
+                        }
+                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors"
+                      >
                         Verify
                       </button>
-                      <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md transition-colors">
-                        Mark Pending
-                      </button>
-                      <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition-colors">
+                      <button
+                        onClick={() =>
+                          handleRejectCandidate(
+                            selectedCandidate.registrationNo
+                          )
+                        }
+                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition-colors"
+                      >
                         Reject
-                      </button>
-                      <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors">
-                        Send Notification
                       </button>
                     </div>
                   </div>

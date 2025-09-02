@@ -3,15 +3,14 @@ import { lazy, Suspense } from "react";
 import { useSelector } from "react-redux";
 import Loader from "../components/Loader/Loader";
 import ProtectedRoutes from "./ProtectedRoutes";
-
 // Lazy load public components
 const Login = lazy(() => import("../pages/auth/Login"));
 const Register = lazy(() => import("../pages/auth/Register"));
 const Signup = lazy(() => import("../pages/auth/Signup"));
+const Homepage = lazy(() => import("../pages/auth/Homepage"));
 
 function AppRoutes() {
   const { isAuthenticated } = useSelector((state) => state.auth);
-
   return (
     <Suspense fallback={<Loader />}>
       <Routes>
@@ -23,13 +22,11 @@ function AppRoutes() {
         <Route
           path="/register"
           element={
-            !isAuthenticated ? <Register /> : <Navigate to="/dashboard" />
+            !isAuthenticated ? <Register /> : <Navigate to="/register" />
           }
         />
-        <Route
-          path="/signup"
-          element={!isAuthenticated ? <Signup /> : <Navigate to="/dashboard" />}
-        />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/homepage" element={<Homepage />} />
 
         {/* Root redirect */}
         <Route

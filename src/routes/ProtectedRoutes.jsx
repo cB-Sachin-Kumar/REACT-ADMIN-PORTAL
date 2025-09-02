@@ -17,6 +17,7 @@ const UserDashboard = lazy(() => import("../pages/user/Dashboard"));
 const AdminReport = lazy(() => import("../pages/admin/Report"));
 const UploadData = lazy(() => import("../pages/admin/UploadData"));
 const ProposalForm = lazy(() => import("../pages/admin/ProposalForm"));
+const PrintApplication = lazy(() => import("../pages/admin/PrintApplication"));
 
 //user import
 // const UserReport = lazy(() => import("../pages/user/Report"));
@@ -55,6 +56,8 @@ function ProtectedRoutes() {
           //user routes
           {/*<Route path="user/report" element={<UserReport />} /> */}
         </Route>
+        //authentication routes without layout
+        <Route path="admin/print-application" element={<PrintApplication />} />
       </Routes>
     </Suspense>
   );
